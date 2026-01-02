@@ -16,9 +16,9 @@ variable "server_ip" {
 }
 
 variable "ssh_user" {
-  description = "Usuário SSH"
+  description = "Usuário SSH (recomendado: valheim)"
   type        = string
-  default     = "root"
+  default     = "valheim"
 }
 
 variable "ssh_private_key_path" {
@@ -162,9 +162,9 @@ resource "null_resource" "valheim_server" {
       "chmod +x /opt/valheim-server/restore-gdrive.sh",
       "chmod 600 /opt/valheim-server/.env",
 
-      # Configurar firewall (UFW)
-      "ufw allow 2456:2458/udp || true",
-      "ufw allow 2456:2458/tcp || true",
+      # Configurar firewall (UFW) - usando sudo para usuario nao-root
+      "sudo ufw allow 2456:2458/udp || true",
+      "sudo ufw allow 2456:2458/tcp || true",
 
       # Iniciar o container
       "cd /opt/valheim-server && docker compose down || true",
