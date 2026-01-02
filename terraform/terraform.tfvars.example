@@ -4,11 +4,13 @@
 # IP público da sua VPS na Hostinger
 server_ip = "SEU_IP_AQUI"
 
-# Usuário SSH (geralmente root ou seu usuário)
-ssh_user = "root"
+# Usuario SSH dedicado (execute setup-user.sh primeiro como root)
+ssh_user = "valheim"
 
-# Caminho para sua chave SSH privada
-ssh_private_key_path = "~/.ssh/id_rsa"
+# Caminho para a chave SSH do usuario valheim
+# Apos executar setup-user.sh, copie a chave com:
+#   scp root@SEU_IP:/home/valheim/.ssh/id_rsa ~/.ssh/valheim_rsa
+ssh_private_key_path = "~/.ssh/valheim_rsa"
 
 # Configurações do servidor Valheim
 valheim_server_name = "Meu Servidor Valheim"
