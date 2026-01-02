@@ -162,17 +162,8 @@ resource "null_resource" "valheim_server" {
       "chmod +x /opt/valheim-server/restore-gdrive.sh",
       "chmod 600 /opt/valheim-server/.env",
 
-      # Configurar firewall (UFW) - usando sudo para usuario nao-root
-      "sudo ufw allow 2456:2458/udp || true",
-      "sudo ufw allow 2456:2458/tcp || true",
-
-      # Iniciar o container
-      "cd /opt/valheim-server && docker compose down || true",
-      "cd /opt/valheim-server && docker compose pull",
-      "cd /opt/valheim-server && docker compose up -d",
-
-      # Configurar backup automático via cron (diário às 4h)
-      "(crontab -l 2>/dev/null | grep -v valheim-backup; echo '0 4 * * * /opt/valheim-server/backup.sh') | crontab -"
+      # Iniciar container
+      "cd /opt/valheim-server && docker compose up -d --pull=missing"
     ]
   }
 }
