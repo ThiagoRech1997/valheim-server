@@ -14,3 +14,29 @@ ssh_private_key_path = "~/.ssh/id_rsa"
 valheim_server_name = "Meu Servidor Valheim"
 valheim_world_name  = "MeuMundo"
 valheim_password    = "senha_minimo_5_chars"
+
+# =============================================
+# MODIFICADORES DE GAMEPLAY (opcional)
+# =============================================
+# Descomente e altere conforme desejado
+
+# Preset de mundo: normal, casual, easy, hard, hardcore, immersive, hammer
+# world_preset = "normal"
+
+# Raids: none, muchless, less, default, more, muchmore
+# raid_modifier = "default"
+
+# Portais: casual (tudo), default (sem minério), hard (sem itens)
+# portal_modifier = "default"
+
+# Penalidade de morte: casual, veryeasy, easy, default, hard, hardcore
+# death_penalty = "default"
+
+# Recursos: muchless, less, default, more, muchmore, most
+# resource_modifier = "default"
+
+# Inimigos: none, veryless, less, default, more, muchmore
+# enemy_modifier = "default"
+
+# Combate: veryeasy, easy, default, hard, veryhard
+# combat_modifier = "default"

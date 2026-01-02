@@ -93,6 +93,57 @@ docker compose ps
 | 2457  | UDP/TCP   | Query port |
 | 2458  | UDP/TCP   | (reservada) |
 
+## Subir Mundo Local (Save Existente)
+
+Se você já tem um mundo local que joga no seu PC, pode enviá-lo para o servidor.
+
+### Localização dos saves no Windows
+
+```
+C:\Users\SEU_USUARIO\AppData\LocalLow\IronGate\Valheim\worlds_local\
+```
+
+Dentro dessa pasta você terá arquivos como:
+- `MeuMundo.fwl` - Metadados do mundo
+- `MeuMundo.db` - Dados do mundo
+
+### Usando o script de upload
+
+```bash
+# No Git Bash (Windows) ou terminal Linux/Mac
+cd scripts
+chmod +x upload-world.sh
+
+./upload-world.sh SEU_IP "/c/Users/SeuUser/AppData/LocalLow/IronGate/Valheim/worlds_local/MeuMundo"
+```
+
+O script vai:
+1. Parar o servidor
+2. Fazer backup do mundo atual
+3. Enviar seus arquivos
+4. Reiniciar o servidor
+
+### Upload manual via SCP
+
+```bash
+# Parar o servidor
+ssh root@SEU_IP "cd /opt/valheim-server && docker compose stop"
+
+# Enviar arquivos
+scp MeuMundo.fwl MeuMundo.db root@SEU_IP:/tmp/
+
+# Copiar para o volume Docker
+ssh root@SEU_IP "docker run --rm -v valheim-server_valheim-config:/config -v /tmp:/upload alpine sh -c 'cp /upload/MeuMundo.* /config/worlds_local/ && chown -R 1000:1000 /config/worlds_local'"
+
+# Atualizar nome do mundo no .env
+ssh root@SEU_IP "sed -i 's/WORLD_NAME=.*/WORLD_NAME=MeuMundo/' /opt/valheim-server/.env"
+
+# Reiniciar servidor
+ssh root@SEU_IP "cd /opt/valheim-server && docker compose up -d"
+```
+
+**Importante**: O nome do mundo no `WORLD_NAME` do arquivo `.env` deve corresponder exatamente ao nome dos seus arquivos (sem extensão).
+
 ## Backups
 
 - **Automático**: O container faz backup a cada 2 horas

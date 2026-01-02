@@ -17,7 +17,38 @@ services:
       - SERVER_PUBLIC=true
 
       # Configurações de recursos (otimizado para 2 cores / 8GB RAM)
-      - SERVER_ARGS=-crossplay
+      - SERVER_ARGS=-crossplay -modifier raids ${RAID_MODIFIER:-default} -modifier portals ${PORTAL_MODIFIER:-default} -modifier deathpenalty ${DEATH_PENALTY:-default} -modifier resources ${RESOURCE_MODIFIER:-default} -modifier enemies ${ENEMY_MODIFIER:-default} -modifier combat ${COMBAT_MODIFIER:-default} -setkey ${WORLD_PRESET:-normal}
+
+      # =============================================
+      # MODIFICADORES DE GAMEPLAY (mesmo da Steam)
+      # =============================================
+      # Presets de mundo (setkey):
+      #   normal, casual, easy, hard, hardcore, immersive, hammer
+      - WORLD_PRESET=${WORLD_PRESET:-normal}
+
+      # Modificador de Raids (ataques de inimigos na base):
+      #   none, muchless, less, default, more, muchmore
+      - RAID_MODIFIER=${RAID_MODIFIER:-default}
+
+      # Modificador de Portais:
+      #   casual (permite tudo), default (sem minério), hard (sem itens)
+      - PORTAL_MODIFIER=${PORTAL_MODIFIER:-default}
+
+      # Penalidade de Morte:
+      #   casual (sem perda), veryeasy, easy, default, hard, hardcore (perda permanente)
+      - DEATH_PENALTY=${DEATH_PENALTY:-default}
+
+      # Modificador de Recursos (quantidade de drop):
+      #   muchless, less, default, more, muchmore, most
+      - RESOURCE_MODIFIER=${RESOURCE_MODIFIER:-default}
+
+      # Modificador de Inimigos (quantidade e nível):
+      #   none, veryless, less, default, more, muchmore
+      - ENEMY_MODIFIER=${ENEMY_MODIFIER:-default}
+
+      # Modificador de Combate (dano recebido/causado):
+      #   veryeasy, easy, default, hard, veryhard
+      - COMBAT_MODIFIER=${COMBAT_MODIFIER:-default}
 
       # Backups automáticos
       - BACKUPS=true

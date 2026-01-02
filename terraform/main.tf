@@ -44,6 +44,49 @@ variable "valheim_password" {
   sensitive   = true
 }
 
+# Modificadores de Gameplay
+variable "world_preset" {
+  description = "Preset do mundo: normal, casual, easy, hard, hardcore, immersive, hammer"
+  type        = string
+  default     = "normal"
+}
+
+variable "raid_modifier" {
+  description = "Modificador de raids: none, muchless, less, default, more, muchmore"
+  type        = string
+  default     = "default"
+}
+
+variable "portal_modifier" {
+  description = "Modificador de portais: casual, default, hard"
+  type        = string
+  default     = "default"
+}
+
+variable "death_penalty" {
+  description = "Penalidade de morte: casual, veryeasy, easy, default, hard, hardcore"
+  type        = string
+  default     = "default"
+}
+
+variable "resource_modifier" {
+  description = "Modificador de recursos: muchless, less, default, more, muchmore, most"
+  type        = string
+  default     = "default"
+}
+
+variable "enemy_modifier" {
+  description = "Modificador de inimigos: none, veryless, less, default, more, muchmore"
+  type        = string
+  default     = "default"
+}
+
+variable "combat_modifier" {
+  description = "Modificador de combate: veryeasy, easy, default, hard, veryhard"
+  type        = string
+  default     = "default"
+}
+
 # Recurso para copiar arquivos e configurar o servidor
 resource "null_resource" "valheim_server" {
   triggers = {
@@ -73,10 +116,26 @@ resource "null_resource" "valheim_server" {
     destination = "/opt/valheim-server/docker-compose.yml"
   }
 
-  # Copiar script de backup
+  # Copiar script de backup local
   provisioner "file" {
     source      = "${path.module}/../scripts/backup.sh"
     destination = "/opt/valheim-server/backup.sh"
+  }
+
+  # Copiar scripts do Google Drive
+  provisioner "file" {
+    source      = "${path.module}/../scripts/backup-gdrive.sh"
+    destination = "/opt/valheim-server/backup-gdrive.sh"
+  }
+
+  provisioner "file" {
+    source      = "${path.module}/../scripts/setup-gdrive.sh"
+    destination = "/opt/valheim-server/setup-gdrive.sh"
+  }
+
+  provisioner "file" {
+    source      = "${path.module}/../scripts/restore-gdrive.sh"
+    destination = "/opt/valheim-server/restore-gdrive.sh"
   }
 
   # Criar arquivo .env e iniciar o servidor
@@ -87,10 +146,20 @@ resource "null_resource" "valheim_server" {
       "SERVER_NAME=${var.valheim_server_name}",
       "WORLD_NAME=${var.valheim_world_name}",
       "SERVER_PASS=${var.valheim_password}",
+      "WORLD_PRESET=${var.world_preset}",
+      "RAID_MODIFIER=${var.raid_modifier}",
+      "PORTAL_MODIFIER=${var.portal_modifier}",
+      "DEATH_PENALTY=${var.death_penalty}",
+      "RESOURCE_MODIFIER=${var.resource_modifier}",
+      "ENEMY_MODIFIER=${var.enemy_modifier}",
+      "COMBAT_MODIFIER=${var.combat_modifier}",
       "EOF",
 
       # Configurar permissões
       "chmod +x /opt/valheim-server/backup.sh",
+      "chmod +x /opt/valheim-server/backup-gdrive.sh",
+      "chmod +x /opt/valheim-server/setup-gdrive.sh",
+      "chmod +x /opt/valheim-server/restore-gdrive.sh",
       "chmod 600 /opt/valheim-server/.env",
 
       # Configurar firewall (UFW)
@@ -122,4 +191,9 @@ output "connection_info" {
 output "server_location" {
   value       = "/opt/valheim-server"
   description = "Localização dos arquivos no servidor"
+}
+
+output "gdrive_setup" {
+  value       = "Para configurar backup no Google Drive: ssh ${var.ssh_user}@${var.server_ip} '/opt/valheim-server/setup-gdrive.sh'"
+  description = "Comando para configurar Google Drive"
 }
