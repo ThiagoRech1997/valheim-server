@@ -1,0 +1,53 @@
+services:
+  valheim:
+    image: lloesche/valheim-server
+    container_name: valheim-server
+    restart: unless-stopped
+    stop_grace_period: 120s
+    cap_add:
+      - SYS_NICE
+    ports:
+      - "2456-2458:2456-2458/udp"
+      - "2456-2458:2456-2458/tcp"
+    environment:
+      # Configurações do servidor
+      - SERVER_NAME=${SERVER_NAME:-My Valheim Server}
+      - WORLD_NAME=${WORLD_NAME:-MyWorld}
+      - SERVER_PASS=${SERVER_PASS:-secret123}
+      - SERVER_PUBLIC=true
+
+      # Configurações de recursos (otimizado para 2 cores / 8GB RAM)
+      - SERVER_ARGS=-crossplay
+
+      # Backups automáticos
+      - BACKUPS=true
+      - BACKUPS_INTERVAL=7200
+      - BACKUPS_DIRECTORY=/config/backups
+      - BACKUPS_MAX_AGE=7
+      - BACKUPS_MAX_COUNT=10
+
+      # Atualizações
+      - UPDATE_CRON=0 5 * * *
+      - UPDATE_IF_IDLE=true
+
+      # Timezone
+      - TZ=America/Sao_Paulo
+
+      # IDs do usuário/grupo
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - valheim-config:/config
+      - valheim-data:/opt/valheim
+    deploy:
+      resources:
+        limits:
+          memory: 6G
+        reservations:
+          memory: 4G
+
+volumes:
+  valheim-config:
+    driver: local
+  valheim-data:
+    driver: local

@@ -1,0 +1,16 @@
+# Copie este arquivo para terraform.tfvars e preencha com seus valores
+# cp terraform.tfvars.example terraform.tfvars
+
+# IP público da sua VPS na Hostinger
+server_ip = "SEU_IP_AQUI"
+
+# Usuário SSH (geralmente root ou seu usuário)
+ssh_user = "root"
+
+# Caminho para sua chave SSH privada
+ssh_private_key_path = "~/.ssh/id_rsa"
+
+# Configurações do servidor Valheim
+valheim_server_name = "Meu Servidor Valheim"
+valheim_world_name  = "MeuMundo"
+valheim_password    = "senha_minimo_5_chars"
