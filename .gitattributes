@@ -1,0 +1,2 @@
+# Manter scripts com final de linha LF (Linux)
+*.sh text eol=lf
